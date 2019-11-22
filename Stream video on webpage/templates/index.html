@@ -1,0 +1,45 @@
+<html>
+  <head>
+    <title> Pi Video Surveillance</title>
+  </head>
+  <body>
+    <style>
+    input {
+    background-color: #4CAF50;
+    color: yellow;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    display: inline-block;
+    left: 200px;
+    top: 350px;
+    font-size: 20px;
+    }
+    h1 {
+    width: 21.4%;
+    border-radius: 4px;
+    background-color: #4CAF50;
+    color: yellow;
+    }
+    </style>
+    <h1>Pi Video Surveillance</h1>
+    <img src="{{ url_for('video_feed1') }}">
+<!--    <h1>Register Your Details</h1>-->
+    <audio controls>
+        <source src="{{ url_for('audio') }}" type="audio/x-wav;codec=pcm">
+        Your browser does not support the audio element.
+    </audio>
+	<form method="POST" action="/register">
+<!--		First Name : <input type="text" name="first_name" required="" /><br /><br />-->
+<!--		Last Name : <input type="text" name="last_name" required="" /><br /><br />-->
+<!--		Gender : <input type="text" name="gender" required="" /><br /><br />-->
+<!--		Country : <input type="text" name="country" required="" /><br /><br />-->
+<!--		Career : <input type="text" name="career" required="" /><br /><br />-->
+        <input type="submit" name="submit_b" value="Do Something">
+        <input type="submit" name="submit_b" value="Do Something Else">
+		<input type="submit" name="submit_b" value="Do third">
+    </form>
+  </body>
+</html>
