@@ -26,6 +26,26 @@ Command line usage for object detection using YOLOv3
        python3 object_detection_yolo.py --video=run.mp4
        ```
 
+       
+
+* C++:
+
+  * A single image:
+        
+
+    ```bash
+    ./object_detection_yolo.out --image=bird.jpg
+    ```
+
+    
+
+  * A video file:
+
+    ```bash
+     ./object_detection_yolo.out --video=run.mp4
+    ```
+
+
 
 ### Compilation examples
 

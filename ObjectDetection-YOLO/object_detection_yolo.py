@@ -12,7 +12,7 @@ import math
 
 # Initialize the parameters
 confThreshold = 0.2  #Confidence threshold
-nmsThreshold = 0.6   #Non-maximum suppression threshold
+nmsThreshold = 0.2   #Non-maximum suppression threshold
 inpWidth = 416       #Width of network's input image
 inpHeight = 416      #Height of network's input image
 
