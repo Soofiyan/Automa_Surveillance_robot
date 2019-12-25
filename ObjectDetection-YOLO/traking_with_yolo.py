@@ -1,6 +1,3 @@
-# Usage example:  python3 object_detection_yolo.py --video=run.mp4
-#                 python3 object_detection_yolo.py --image=bird.jpg
-
 import cv2
 import argparse
 import sys
@@ -13,12 +10,15 @@ confThreshold = 0.2  #Confidence threshold
 nmsThreshold = 0.2   #Non-maximum suppression threshold
 inpWidth = 416       #Width of network's input image
 inpHeight = 416      #Height of network's input image
+tracking_gone = 0
+first_in_loop = 1
+first_loop = 1
 
 parser = argparse.ArgumentParser(description='Object Detection using YOLO in OPENCV')
 parser.add_argument('--image', help='Path to image file.')
 parser.add_argument('--video', help='Path to video file.')
 args = parser.parse_args()
-        
+
 # Load names of classes
 classesFile = "coco.names"
 classes = None
@@ -51,7 +51,6 @@ def drawPred(classId, conf, left, top, right, bottom,prev_centre):
     class_object = 'yyy'
     cv2.rectangle(frame, (left, top), (right, bottom), (255, 178, 50), 3)
     centre = compute_center(left,right,top,bottom)
-    print(centre[1])
     label = '%.2f' % conf
     # Get the label for the class name and its confidence
     class_object = classes[classId]
@@ -73,8 +72,34 @@ def drawPred(classId, conf, left, top, right, bottom,prev_centre):
     cv2.circle(frame, (centre_x,centre_y), 1, (255, 255, 255), 10)
     return centre
 
+def IoU(curr,prev):
+    x1_curr = curr[0]
+    x1_prev = prev[0]
+    y1_curr = curr[1]
+    y1_prev = prev[1]
+    x2_curr = curr[0] + curr[2]
+    x2_prev = prev[0] + prev[2]
+    y2_curr = curr[1] + curr[3]
+    y2_prev = prev[1] + prev[3]
+    x_left = max(x1_curr,x1_prev)
+    y_top = max(y1_curr,y1_prev)
+    x_right = min(x2_curr,x2_prev)
+    y_bottom = min(y2_curr,y2_prev)
+    if x_right < x_left or y_bottom < y_top:
+        return 0.0
+    intersection_area = (x_right - x_left) * (y_bottom - y_top)
+    area_curr = (x2_curr - x1_curr)*(y2_curr - y1_curr)
+    area_prev = (x2_prev - x1_prev)*(y2_prev - y1_prev)
+    iou = intersection_area / float(area_curr + area_prev - intersection_area)
+    if iou <= 0.0:
+        iou = 0.0
+    if iou >= 1.0:
+        iou = 1.0
+    return iou
+
+
 # Remove the bounding boxes with low confidence using non-maxima suppression
-def postprocess(frame, outs):
+def postprocess(frame, outs, first_in_loop,first_loop):
     frameHeight = frame.shape[0]
     frameWidth = frame.shape[1]
 
@@ -98,10 +123,23 @@ def postprocess(frame, outs):
                 classIds.append(classId)
                 confidences.append(float(confidence))
                 boxes.append([left, top, width, height])
-    print(boxes)
     # Perform non maximum suppression to eliminate redundant overlapping boxes with
     # lower confidences.
     indices = cv2.dnn.NMSBoxes(boxes, confidences, confThreshold, nmsThreshold)
+    global tracking_gone
+    global max_i
+    max_i = 0
+    global bbox
+    global prev_bbox
+    global bbox_max
+    global iou_b
+    global max_iou
+    global object_detect
+    global tracker
+    object_detect = 0
+    max_iou = -1.0
+    iou_b = 0.0
+
     for i in indices:
         i = i[0]
         box = boxes[i]
@@ -109,74 +147,83 @@ def postprocess(frame, outs):
         top = box[1]
         width = box[2]
         height = box[3]
+        if(first_loop):
+            prev_bbox = (left,top,width,height)
+            first_loop = 0
+        if(first_in_loop):
+            bbox_max = (left,top,width,height)
+            first_in_loop = 0
         global prev_centre
+        prev_centre = (0,0)
         centre = drawPred(classIds[i], confidences[i], left, top, left + width, top + height,prev_centre)
         prev_centre = centre
+        if(classes[classIds[i]] == 'person'):
+            global bbox
+            bbox = (left,top,width,height)
+            iou_b = IoU(bbox,prev_bbox)
+            if(iou_b > max_iou):
+                bbox_max = bbox
+                max_i = i
+                max_iou = iou_b
+            object_detect = 1
+            # print(bbox)
+            # print()
+        print(max_iou)
+    if(max_iou < 0.3):
+        tracking_gone = 1
+    if object_detect == 1:
+        if tracking_gone:
+            tracker = cv2.TrackerCSRT_create()
+            ok = tracker.init(frame, bbox_max)
+            tracking_gone = 0
+        
+        ok, bbox = tracker.update(frame)
+        prev_bbox = bbox
+        if ok:
+            # Tracking success
+            p1 = (int(bbox[0]), int(bbox[1]))
+            p2 = (int(bbox[0] + bbox[2]), int(bbox[1] + bbox[3]))
+            cv2.rectangle(frame, p1, p2, (255, 0, 0), 2, 1)
+        else:
+            tracking_gone = 1
+        winname = "Tracking"
+        cv2.namedWindow(winname)
+        cv2.moveWindow(winname, 130,130)
+        cv2.imshow(winname, frame)
+        
+        # cv2.imshow(winName, frame)
+    else:
+        winname = "Tracking"
+        cv2.namedWindow(winname)
+        cv2.moveWindow(winname, 130,130)
+        cv2.imshow(winname, frame)
+
+#tracking block
+tracker = cv2.TrackerCSRT_create()
+
 # Process inputs
-winName = 'Deep learning object detection in OpenCV'
-cv2.namedWindow(winName, cv2.WINDOW_NORMAL)
 
-outputFile = "yolo_out_py.avi"
-if (args.image):
-    # Open the image file
-    if not os.path.isfile(args.image):
-        print("Input image file ", args.image, " doesn't exist")
-        sys.exit(1)
-    cap = cv2.VideoCapture(args.image)
-    outputFile = args.image[:-4]+'_yolo_out_py.jpg'
-elif (args.video):
-    # Open the video file
-    if not os.path.isfile(args.video):
-        print("Input video file ", args.video, " doesn't exist")
-        sys.exit(1)
-    cap = cv2.VideoCapture(args.video)
-    outputFile = args.video[:-4]+'_yolo_out_py.avi'
-else:
-    # Webcam input
-    cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(0)
 
-# Get the video writer initialized to save the output video
-if (not args.image):
-    vid_writer = cv2.VideoWriter(outputFile, cv2.VideoWriter_fourcc('M','J','P','G'), 30, (round(cap.get(cv2.CAP_PROP_FRAME_WIDTH)),round(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))))
-prev_centre = (0,0)
 while(cap.isOpened()):
     
     # get frame from the video
     hasFrame, frame = cap.read()
     frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     frame = cv2.merge((frame, frame, frame))
-    # Stop the program if reached end of video
-    # if not hasFrame:
-    #     print("Done processing !!!")
-    #     print("Output file is stored as ", outputFile)
-    #     cv.waitKey(3000)
-    #     # Release device
-    #     cap.release()
-    #     break
+
     cv2.waitKey(1)
     # Create a 4D blob from a frame.
     blob = cv2.dnn.blobFromImage(frame, 1/255, (inpWidth, inpHeight), [0,0,0], 1, crop=False)
-
     # Sets the input to the network
     net.setInput(blob)
 
     # Runs the forward pass to get output of the output layers
     outs = net.forward(getOutputsNames(net))
-
     # Remove the bounding boxes with low confidence
-    postprocess(frame, outs)
-
-
-    # Put efficiency information. The function getPerfProfile returns the overall time for inference(t) and the timings for each of the layers(in layersTimes)
-    # t, _ = net.getPerfProfile()
-    # label = 'Inference time: %.2f ms' % (t * 1000.0 / cv2.getTickFrequency())
-    # cv2.putText(frame, label, (0, 15), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255))
-
-    # Write the frame with the detection boxes
-    if (args.image):
-        cv2.imwrite(outputFile, frame.astype(np.uint8))
-    else:
-        vid_writer.write(frame.astype(np.uint8))
-
-    cv2.imshow(winName, frame)
-
+    postprocess(frame, outs, first_in_loop, first_loop)
+    first_loop = 0
+    first_in_loop = 1
+    # Exit if ESC pressed
+    k = cv2.waitKey(1) & 0xff
+    if k == 27: break
