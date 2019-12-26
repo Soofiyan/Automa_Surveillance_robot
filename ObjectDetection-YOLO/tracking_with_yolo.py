@@ -136,6 +136,9 @@ def postprocess(frame, outs, first_in_loop,first_loop):
     global max_iou
     global object_detect
     global tracker
+    # global centres
+    # global centre_track
+    # centres = (0.0,0.0)
     object_detect = 0
     max_iou = -1.0
     iou_b = 0.0
@@ -157,19 +160,24 @@ def postprocess(frame, outs, first_in_loop,first_loop):
         prev_centre = (0,0)
         centre = drawPred(classIds[i], confidences[i], left, top, left + width, top + height,prev_centre)
         prev_centre = centre
-        if(classes[classIds[i]] == 'person'):
-            global bbox
-            bbox = (left,top,width,height)
-            iou_b = IoU(bbox,prev_bbox)
-            if(iou_b > max_iou):
-                bbox_max = bbox
-                max_i = i
-                max_iou = iou_b
-            object_detect = 1
+        # if(classes[classIds[i]] == 'person'):
+        global bbox
+        bbox = (left,top,width,height)
+        iou_b = IoU(bbox,prev_bbox)
+        # centres = compute_center(left,top,width,height)
+        # centre_track = compute_center(prev_bbox[0],prev_bbox[1],prev_bbox[2],prev_bbox[3])
+        # diff_centre = (abs(int(centres[0])- int(centre_track[0])),abs(int(centres[1])- int(centre_track[1])))
+        # centre_diff_value = np.sqrt(np.square(diff_centre[0]) + np.square(diff_centre[1]))
+        # print(centre_diff_value)
+        if(iou_b > max_iou):
+            bbox_max = bbox
+            max_i = i
+            max_iou = iou_b
+        object_detect = 1
             # print(bbox)
             # print()
-        print(max_iou)
-    if(max_iou < 0.3):
+        # print(max_iou)
+    if(max_iou < 0.25):
         tracking_gone = 1
     if object_detect == 1:
         if tracking_gone:
