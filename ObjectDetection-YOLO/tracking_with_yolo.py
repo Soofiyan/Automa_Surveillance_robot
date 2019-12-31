@@ -7,13 +7,12 @@ import math
 
 # Initialize the parameters
 confThreshold = 0.2  #Confidence threshold
-nmsThreshold = 0.2   #Non-maximum suppression threshold
+nmsThreshold = 0.2   #Non-maxsimum suppression threshold
 inpWidth = 416       #Width of network's input image
 inpHeight = 416      #Height of network's input image
 tracking_gone = 0
 first_in_loop = 1
 first_loop = 1
-
 parser = argparse.ArgumentParser(description='Object Detection using YOLO in OPENCV')
 parser.add_argument('--image', help='Path to image file.')
 parser.add_argument('--video', help='Path to video file.')
