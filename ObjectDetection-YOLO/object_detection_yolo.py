@@ -1,6 +1,12 @@
-# Usage example:  python3 object_detection_yolo.py --video=run.mp4
-#                 python3 object_detection_yolo.py --image=bird.jpg
-
+# /*
+# *
+# * Project Name: 	Object detection using yolo algorithm
+# * Author List: 	Soofiyan Atar
+# * Filename: 		object_detection_yolo.py
+# * Functions: 		getOutputsNames(net), compute_center(), drawPred(), postprocess()
+# * Global Variables:	prev_center
+# *
+# */
 import cv2
 import argparse
 import sys
@@ -172,7 +178,6 @@ while(cap.isOpened()):
     # label = 'Inference time: %.2f ms' % (t * 1000.0 / cv2.getTickFrequency())
     # cv2.putText(frame, label, (0, 15), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255))
 
-    # Write the frame with the detection boxes
     if (args.image):
         cv2.imwrite(outputFile, frame.astype(np.uint8))
     else:

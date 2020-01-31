@@ -1,3 +1,13 @@
+# /*
+# *
+# * Project Name:   face recognition using deep neural network
+# * Author List: 	Soofiyan Atar
+# * Filename: 		face_recognition_dnn.py
+# * Functions: 		detectFaceOpenCVDnn(net, frame)
+# * Global Variables:	count,id,ids
+# *
+# */
+
 from __future__ import division
 import cv2
 import time
@@ -11,7 +21,7 @@ font = cv2.FONT_HERSHEY_SIMPLEX
 id = 1
 
 # names related to ids: example ==> Marcelo: id=1,  etc
-names = ['None', 'Soofiyan', 'Soofi', 'Ilza', 'Z', 'W'] 
+names = ['None', 'C', 'D', 'E', 'Z', 'W'] 
 
 def detectFaceOpenCVDnn(net, frame):
     global count

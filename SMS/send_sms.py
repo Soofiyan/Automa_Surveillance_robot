@@ -1,12 +1,12 @@
-# import nexmo
-
-# client = nexmo.Client(key='094fa742', secret='b5dvOcN0PASGPw7e')
-
-# client.send_message({
-#     'from': 'Nexmo',
-#     'to': '917506183099',
-#     'text': 'Hello from Nexmo',
-# })
+# /*
+# *
+# * Project Name: 	sms send on alert
+# * Author List: 	Soofiyan Atar
+# * Filename: 		send_sms.py
+# * Functions: 		None
+# * Global Variables:	None
+# *
+# */
 
 import requests
  

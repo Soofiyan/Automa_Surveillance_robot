@@ -1,3 +1,13 @@
+# /*
+# *
+# * Project Name: 	Web streaming in the network
+# * Author List: 	Soofiyan Atar
+# * Filename: 		webstreaming.py
+# * Functions: 		index(), detect_motion(), generate(), register(), video_feed1()
+# * Global Variables:	vs, outputFrame, lock
+# *
+# */
+
 from imutils.video import VideoStream
 from flask import Response
 from flask import Flask, render_template, request

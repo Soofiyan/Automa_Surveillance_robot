@@ -1,3 +1,12 @@
+# /*
+# *
+# * Project Name: 	audio viewing using sockets
+# * Author List: 	Soofiyan Atar
+# * Filename: 		Viewer_audio.py
+# * Functions: 		None
+# * Global Variables:	None
+# *
+# */
 import socket
 import pyaudio
 import wave

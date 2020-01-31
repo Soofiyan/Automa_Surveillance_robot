@@ -1,4 +1,13 @@
-# Echo server program
+# /*
+# *
+# * Project Name: 	audio streaming using sockets
+# * Author List: 	Soofiyan Atar
+# * Filename: 		Streamer_audio.py
+# * Functions: 		None
+# * Global Variables:	None
+# *
+# */
+
 import socket
 import pyaudio
 import wave

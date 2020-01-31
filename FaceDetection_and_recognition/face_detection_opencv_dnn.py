@@ -1,3 +1,13 @@
+# /*
+# *
+# * Project Name:   face detection using deep neural network
+# * Author List: 	Soofiyan Atar
+# * Filename: 		face_detection_opencv_dnn.py
+# * Functions: 		detectFaceOpenCVDnn(net, frame)
+# * Global Variables:	count
+# *
+# */
+
 from __future__ import division
 import cv2
 import time
@@ -48,33 +58,18 @@ if __name__ == "__main__" :
 
     cap = cv2.VideoCapture(source)
     hasFrame, frame = cap.read()
-
-    vid_writer = cv2.VideoWriter('output-dnn-{}.avi'.format(str(source).split(".")[0]),cv2.VideoWriter_fourcc('M','J','P','G'), 15, (frame.shape[1],frame.shape[0]))
-
-    frame_count = 0
     tt_opencvDnn = 0
     count = 0
     while(1):
         hasFrame, frame = cap.read()
         if not hasFrame:
             break
-        frame_count += 1
 
         t = time.time()
         outOpencvDnn, bboxes = detectFaceOpenCVDnn(net,frame)
-        tt_opencvDnn += time.time() - t
-        fpsOpencvDnn = frame_count / tt_opencvDnn
-        label = "OpenCV DNN ; FPS : {:.2f}".format(fpsOpencvDnn)
-        cv2.putText(outOpencvDnn, label, (10,50), cv2.FONT_HERSHEY_SIMPLEX, 1.4, (0, 0, 255), 3, cv2.LINE_AA)
-
-        cv2.imshow("Face Detection Comparison", outOpencvDnn)
-
-        vid_writer.write(outOpencvDnn)
-        if frame_count == 1:
-            tt_opencvDnn = 0
+        cv2.imshow("Face Detection", outOpencvDnn)
 
         k = cv2.waitKey(10)
         if k == 27:
             break
     cv2.destroyAllWindows()
-    vid_writer.release()

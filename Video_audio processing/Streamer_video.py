@@ -1,3 +1,12 @@
+# /*
+# *
+# * Project Name: 	video streaming using sockets
+# * Author List: 	Soofiyan Atar
+# * Filename: 		Streamer_video.py
+# * Functions: 		None
+# * Global Variables:	None
+# *
+# */
 import base64
 import cv2
 import zmq
@@ -20,27 +29,3 @@ while True:
         camera.release()
         cv2.destroyAllWindows()
         break
-
-# from flask import Flask, render_template, Response
-# from streamer import Streamer
-#
-# app = Flask(__name__)
-#
-# def gen():
-#   streamer = Streamer('localhost', 8089)
-#   streamer.start()
-#
-#   while True:
-#     if streamer.client_connected():
-#       yield (b'--frame\r\n'b'Content-Type: image/jpeg\r\n\r\n' + streamer.get_jpeg() + b'\r\n\r\n')
-#
-# @app.route('/')
-# def index():
-#   return render_template('index.html')
-#
-# @app.route('/video_feed')
-# def video_feed():
-#   return Response(gen(), mimetype='multipart/x-mixed-replace; boundary=frame')
-#
-# if __name__ == '__main__':
-#   app.run(host='localhost', threaded=True)
