@@ -24,7 +24,7 @@ python3 speech.py
 ```
 
 Face detection and recognition
-To run face recogntiion and detection first we have to collect all custom face so first run
+To run face recogntiion and detection first we have to install models for detection for example opencv_face_detector_uint8.pb and opencv_face_detector.pbtxt and then we have to collect all custom face so after downloading and stroing it in models folder run
 
 ```
 cd FaceDetection_and_recogniton
