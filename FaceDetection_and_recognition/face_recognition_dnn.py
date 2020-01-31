@@ -14,7 +14,7 @@ import time
 import sys
 
 recognizer = cv2.face.LBPHFaceRecognizer_create()
-recognizer.read('/Applications/Automa/FaceDetectionComparison/training/trainer.yml')
+recognizer.read('/FaceDetection_and_recognition/training/trainer.yml')
 font = cv2.FONT_HERSHEY_SIMPLEX
 
 #iniciate id counter
@@ -71,8 +71,8 @@ if __name__ == "__main__" :
     # OpenCV DNN supports 2 networks.
     # 1. FP16 version of the original caffe implementation ( 5.4 MB )
     # 2. 8 bit Quantized version using Tensorflow ( 2.7 MB )
-    modelFile = "/Applications/Codes/learnopencv-master/FaceDetectionComparison/models/opencv_face_detector_uint8.pb"
-    configFile = "/Applications/Codes/learnopencv-master/FaceDetectionComparison/models/opencv_face_detector.pbtxt"
+    modelFile = "/FaceDetection_and_recognition/models/opencv_face_detector_uint8.pb"
+    configFile = "/FaceDetection_and_recognition/models/opencv_face_detector.pbtxt"
     net = cv2.dnn.readNetFromTensorflow(modelFile, configFile)
 
     conf_threshold = 0.6
