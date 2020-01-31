@@ -14,10 +14,10 @@ from PIL import Image
 import os
 
 # Path for face image database
-path = '/Applications/Automa/FaceDetectionComparison/dataset'
+path = '/FaceDetection_and_recognition/dataset'
 
 recognizer = cv2.face.LBPHFaceRecognizer_create()
-detector = cv2.CascadeClassifier("/Applications/Automa/FaceDetectionComparison/haarcascade_frontalface_default.xml")
+detector = cv2.CascadeClassifier("/FaceDetection_and_recognition/haarcascade_frontalface_default.xml")
 
 # function to get the images and label data
 def getImagesAndLabels(path):
@@ -27,7 +27,7 @@ def getImagesAndLabels(path):
     ids = []
 
     for imagePath in imagePaths:
-        if imagePath == '/Applications/Automa/FaceDetectionComparison/dataset/' + '.DS_Store':
+        if imagePath == '/FaceDetection_and_recognition/dataset/' + '.DS_Store':
             continue
         PIL_img = Image.open(imagePath).convert('L') # convert it to grayscale
         img_numpy = np.array(PIL_img,'uint8')
@@ -46,7 +46,7 @@ faces,ids = getImagesAndLabels(path)
 recognizer.train(faces, np.array(ids))
 
 # Save the model into trainer/trainer.yml
-recognizer.write('/Applications/Automa/FaceDetectionComparison/training/trainer.yml') # recognizer.save() worked on Mac, but not on Pi
+recognizer.write('/FaceDetection_and_recognition/training/trainer.yml') # recognizer.save() worked on Mac, but not on Pi
 
 # Print the numer of faces trained and end program
 print("\n [INFO] {0} faces trained. Exiting Program".format(len(np.unique(ids))))

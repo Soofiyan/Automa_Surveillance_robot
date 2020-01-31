@@ -11,8 +11,11 @@
 import requests
  
 url = "https://www.fast2sms.com/dev/bulk"
+
+print("Enter your number    ")
+number = input()
  
-payload = "sender_id=FSTSMS&message=test&language=english&route=p&numbers=7506183099"
+payload = "sender_id=FSTSMS&message=test&language=english&route=p&numbers={}".format(number)
 headers = {
  'authorization': "BEwV21NpDcinrksYqIa73K5uLzb6yjexCZogSOGWlUt9FRJAdM3tUEuNFSKwfd2gX4veyCjpMhaImYHi",
  'Content-Type': "application/x-www-form-urlencoded",

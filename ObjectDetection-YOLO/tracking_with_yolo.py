@@ -7,16 +7,6 @@
 # * Global Variables:	prev_center, tracking_gone, bbox, prev_bbox, bbox_max,
 # *                     iou_b, max_iou, object_detect, tracker   
 # *
-global tracking_gone
-    global max_i
-    max_i = 0
-    global bbox
-    global prev_bbox
-    global bbox_max
-    global iou_b
-    global max_iou
-    global object_detect
-    global tracker
 # */
 
 import cv2

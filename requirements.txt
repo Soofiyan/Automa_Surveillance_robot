@@ -1,0 +1,13 @@
+SpeechRecognition
+numpy
+opencv-python
+times
+Pillow
+requests
+imutils
+flask
+sockets
+pyaudio
+wave
+zmq
+pybase64

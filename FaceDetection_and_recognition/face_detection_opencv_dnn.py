@@ -35,7 +35,7 @@ def detectFaceOpenCVDnn(net, frame):
             cv2.rectangle(frameOpencvDnn, (x1, y1), (x2, y2), (0, 255, 0), int(round(frameHeight/150)), 8)
             face_id = 2
             try :
-                cv2.imwrite("/Applications/Codes/learnopencv-master/FaceDetectionComparison/dataset/" + str(count) + '.' + str(face_id) + ".jpg", gray[y1:y2,x1:x2])
+                cv2.imwrite("/FaceDetection_and_recognition/dataset/" + str(count) + '.' + str(face_id) + ".jpg", gray[y1:y2,x1:x2])
             except Exception as e:
                 print(e)
             count += 1
@@ -46,8 +46,8 @@ if __name__ == "__main__" :
     # OpenCV DNN supports 2 networks.
     # 1. FP16 version of the original caffe implementation ( 5.4 MB )
     # 2. 8 bit Quantized version using Tensorflow ( 2.7 MB )
-    modelFile = "/Applications/Codes/learnopencv-master/FaceDetectionComparison/models/opencv_face_detector_uint8.pb"
-    configFile = "/Applications/Codes/learnopencv-master/FaceDetectionComparison/models/opencv_face_detector.pbtxt"
+    modelFile = "/FaceDetection_and_recognition/models/opencv_face_detector_uint8.pb"
+    configFile = "/FaceDetection_and_recognition/models/opencv_face_detector.pbtxt"
     net = cv2.dnn.readNetFromTensorflow(modelFile, configFile)
 
     conf_threshold = 0.6
